@@ -1,0 +1,11 @@
+{
+  "name": "m-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "אתר משרד רואי חשבון משה שטרן — אתר סטטי, ללא תלויות זמן ריצה",
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node serve.js",
+    "start": "node build.js && node serve.js"
+  }
+}

@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>art generator</title>
+<style>html,body{margin:0;background:#05070d}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+/* ============================================================
+   art.html — offline generator for the site's image assets.
+   Opened by tools/genart.js in headless Chrome, screenshotted,
+   and written to assets/img/. Not shipped to visitors.
+   Query: ?type=flow&seed=7&w=1600&h=900
+   ============================================================ */
+(function () {
+  var q = new URLSearchParams(location.search);
+  var TYPE = q.get('type') || 'flow';
+  var SEED = parseInt(q.get('seed') || '1', 10);
+  var W = parseInt(q.get('w') || '1600', 10);
+  var H = parseInt(q.get('h') || '900', 10);
+
+  var c = document.getElementById('c');
+  c.width = W; c.height = H;
+  c.style.width = W + 'px'; c.style.height = H + 'px';
+  var x = c.getContext('2d');
+
+  /* ---------- deterministic randomness ---------- */
+  var s = SEED >>> 0;
+  function rnd() {
+    s ^= s << 13; s >>>= 0;
+    s ^= s >> 17;
+    s ^= s << 5;  s >>>= 0;
+    return s / 4294967296;
+  }
+  function rng(a, b) { return a + rnd() * (b - a); }
+
+  /* ---------- value noise + fbm ---------- */
+  var P = new Float32Array(65536);
+  for (var i = 0; i < 65536; i++) P[i] = rnd();
+  function h2(ix, iy) { return P[((ix * 374761393 + iy * 668265263) >>> 0) & 65535]; }
+  function noise(px, py) {
+    var ix = Math.floor(px), iy = Math.floor(py);
+    var fx = px - ix, fy = py - iy;
+    fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+    var a = h2(ix, iy), b = h2(ix + 1, iy), cc = h2(ix, iy + 1), d = h2(ix + 1, iy + 1);
+    return (a + (b - a) * fx) + ((cc + (d - cc) * fx) - (a + (b - a) * fx)) * fy;
+  }
+  function fbm(px, py, oct) {
+    var v = 0, amp = 0.5, f = 1, norm = 0;
+    for (var k = 0; k < (oct || 5); k++) { v += amp * noise(px * f, py * f); norm += amp; amp *= 0.5; f *= 2.04; }
+    return v / norm;
+  }
+
+  /* ---------- palette ---------- */
+  // the light set is the same artwork inked on paper instead of on night
+  var LIGHT = q.get('light') === '1';
+  var INK0 = LIGHT ? '#F7F3EA' : '#04060c';
+  var INK1 = LIGHT ? '#F1EADC' : '#0a1120';
+  var INK2 = LIGHT ? '#E9DFCB' : '#111c30';
+  function brass(a, light) {
+    // light 0..1 walks from deep bronze to pale champagne (or the reverse on paper)
+    var l = light === undefined ? 0.5 : light;
+    if (LIGHT) {
+      var rr = Math.round(150 - 62 * l);
+      var gg = Math.round(112 - 52 * l);
+      var bb = Math.round(52 - 26 * l);
+      return 'rgba(' + rr + ',' + gg + ',' + bb + ',' + (a * 0.9) + ')';
+    }
+    var r = Math.round(152 + 103 * l);
+    var g = Math.round(108 + 110 * l);
+    var b = Math.round(42 + 96 * l);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+  }
+
+  function ground() {
+    var g = x.createLinearGradient(0, 0, W * 0.7, H);
+    g.addColorStop(0, INK2); g.addColorStop(0.45, INK1); g.addColorStop(1, INK0);
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+
+    var r = x.createRadialGradient(W * 0.72, H * 0.24, 0, W * 0.72, H * 0.24, Math.max(W, H) * 0.75);
+    r.addColorStop(0, LIGHT ? 'rgba(198,158,86,0.20)' : 'rgba(190,146,68,0.20)');
+    r.addColorStop(0.45, LIGHT ? 'rgba(170,134,72,0.07)' : 'rgba(150,112,50,0.06)');
+    r.addColorStop(1, 'rgba(0,0,0,0)');
+    x.fillStyle = r; x.fillRect(0, 0, W, H);
+  }
+
+  /* ============================================================
+     motifs
+     ============================================================ */
+
+  // trade routes: particles steered by a flow field
+  function flow() {
+    var N = Math.round(W * 1.9), steps = 190, sc = 0.0016;
+    x.globalCompositeOperation = LIGHT ? 'multiply' : 'lighter';
+    for (var i = 0; i < N; i++) {
+      var px = rng(-W * 0.12, W * 1.12), py = rng(-H * 0.12, H * 1.12);
+      var light = Math.pow(rnd(), 1.7);
+      var a = 0.030 + light * 0.125;
+      x.strokeStyle = brass(a, 0.25 + light * 0.75);
+      x.lineWidth = 0.60 + light * 1.45;
+      x.beginPath(); x.moveTo(px, py);
+      for (var k = 0; k < steps; k++) {
+        var ang = (fbm(px * sc, py * sc, 4) - 0.5) * 7.2 + Math.PI * 0.12;
+        px += Math.cos(ang) * 2.4;
+        py += Math.sin(ang) * 2.4;
+        if (px < -60 || px > W + 60 || py < -60 || py > H + 60) break;
+        x.lineTo(px, py);
+      }
+      x.stroke();
+    }
+    x.globalCompositeOperation = 'source-over';
+  }
+
+  // sedimentary bands, reads as balance-sheet strata
+  function strata() {
+    var bands = 46;
+    for (var i = 0; i < bands; i++) {
+      var t = i / bands;
+      var y0 = H * (0.06 + t * 0.92);
+      var light = Math.pow(Math.abs(Math.sin(t * 5.2 + SEED)), 1.6);
+      x.beginPath();
+      x.moveTo(-20, y0);
+      for (var px = -20; px <= W + 20; px += 8) {
+        var d = (fbm(px * 0.0013, i * 0.22 + 4.1, 4) - 0.5) * H * 0.10;
+        x.lineTo(px, y0 + d);
+      }
+      x.strokeStyle = brass(0.11 + light * 0.34, 0.2 + light * 0.8);
+      x.lineWidth = 0.9 + light * 2.8;
+      x.stroke();
+    }
+  }
+
+  // ruled ledger with a few live entries
+  function ledger() {
+    var rows = 34, gap = H / rows;
+    for (var i = 0; i < rows; i++) {
+      var y = gap * (i + 0.5);
+      x.strokeStyle = brass(0.10, 0.42);
+      x.lineWidth = 1;
+      x.beginPath(); x.moveTo(W * 0.04, y); x.lineTo(W * 0.96, y); x.stroke();
+
+      // entry bars of varying weight
+      var n = 2 + Math.floor(rnd() * 4);
+      for (var k = 0; k < n; k++) {
+        var bw = rng(W * 0.03, W * 0.20);
+        var bx = rng(W * 0.05, W * 0.90 - bw);
+        var light = Math.pow(rnd(), 2.0);
+        x.fillStyle = brass(0.06 + light * 0.34, 0.25 + light * 0.75);
+        x.fillRect(bx, y - gap * 0.20, bw, gap * 0.26);
+      }
+    }
+    // columns
+    for (var cix = 1; cix < 5; cix++) {
+      x.strokeStyle = brass(0.09, 0.6);
+      x.beginPath(); x.moveTo(W * cix / 5, 0); x.lineTo(W * cix / 5, H); x.stroke();
+    }
+  }
+
+  // topographic rings
+  function rings() {
+    var cx = W * 0.36, cy = H * 0.52, N = 68;
+    for (var i = 0; i < N; i++) {
+      var t = i / N;
+      var rad = Math.max(W, H) * (0.03 + t * 0.72);
+      var light = Math.pow(1 - t, 1.4);
+      x.beginPath();
+      for (var a = 0; a <= Math.PI * 2 + 0.05; a += 0.03) {
+        var wob = (fbm(Math.cos(a) * 1.6 + 3, Math.sin(a) * 1.6 + t * 2.4, 4) - 0.5) * rad * 0.22;
+        var rr = rad + wob;
+        var px = cx + Math.cos(a) * rr, py = cy + Math.sin(a) * rr * 0.86;
+        a === 0 ? x.moveTo(px, py) : x.lineTo(px, py);
+      }
+      x.closePath();
+      x.strokeStyle = brass(0.09 + light * 0.30, 0.25 + light * 0.75);
+      x.lineWidth = 0.7 + light * 2.1;
+      x.stroke();
+    }
+  }
+
+  // worley cells, a network of holdings
+  function cells() {
+    var N = 46, pts = [];
+    for (var i = 0; i < N; i++) pts.push({ x: rng(-W * 0.1, W * 1.1), y: rng(-H * 0.1, H * 1.1) });
+
+    // edges between near neighbours
+    x.globalCompositeOperation = LIGHT ? 'multiply' : 'lighter';
+    for (var i2 = 0; i2 < N; i2++) {
+      for (var j = i2 + 1; j < N; j++) {
+        var dx = pts[i2].x - pts[j].x, dy = pts[i2].y - pts[j].y;
+        var d = Math.hypot(dx, dy);
+        if (d > W * 0.20) continue;
+        var a = (1 - d / (W * 0.20)) * 0.34;
+        x.strokeStyle = brass(a, 0.55);
+        x.lineWidth = 1.0;
+        x.beginPath(); x.moveTo(pts[i2].x, pts[i2].y); x.lineTo(pts[j].x, pts[j].y); x.stroke();
+      }
+    }
+    // nodes
+    for (var k = 0; k < N; k++) {
+      var light = Math.pow(rnd(), 1.6);
+      var r = 2 + light * 9;
+      var g = x.createRadialGradient(pts[k].x, pts[k].y, 0, pts[k].x, pts[k].y, r * 5);
+      g.addColorStop(0, brass(0.55 + light * 0.35, 0.85));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      x.fillStyle = g;
+      x.beginPath(); x.arc(pts[k].x, pts[k].y, r * 5, 0, Math.PI * 2); x.fill();
+    }
+    x.globalCompositeOperation = 'source-over';
+  }
+
+  // rhythm grid, short strokes turning with the field
+  function weave() {
+    var step = Math.max(14, Math.round(W / 96));
+    for (var py = step; py < H; py += step) {
+      for (var px = step; px < W; px += step) {
+        var ang = (fbm(px * 0.0022, py * 0.0022, 4) - 0.5) * 5.4;
+        var light = fbm(px * 0.0011 + 9, py * 0.0011 + 4, 3);
+        var len = step * (0.35 + light * 0.75);
+        x.strokeStyle = brass(0.10 + light * 0.40, 0.2 + light * 0.8);
+        x.lineWidth = 0.8 + light * 1.9;
+        x.beginPath();
+        x.moveTo(px - Math.cos(ang) * len * 0.5, py - Math.sin(ang) * len * 0.5);
+        x.lineTo(px + Math.cos(ang) * len * 0.5, py + Math.sin(ang) * len * 0.5);
+        x.stroke();
+      }
+    }
+  }
+
+  // two phyllotaxis systems, interlocking
+  function spiral() {
+    var cx = [W * 0.34, W * 0.66], cy = [H * 0.44, H * 0.60];
+    x.globalCompositeOperation = LIGHT ? 'multiply' : 'lighter';
+    for (var sIdx = 0; sIdx < 2; sIdx++) {
+      var N = 1500, ga = Math.PI * (3 - Math.sqrt(5));
+      for (var i = 0; i < N; i++) {
+        var t = i / N;
+        var r = Math.sqrt(i) * (Math.min(W, H) * 0.020);
+        var a = i * ga + sIdx * 1.7;
+        var px = cx[sIdx] + Math.cos(a) * r;
+        var py = cy[sIdx] + Math.sin(a) * r * 0.88;
+        var light = Math.pow(1 - t, 1.2);
+        x.fillStyle = brass(0.12 + light * 0.50, 0.25 + light * 0.75);
+        var rad = 0.8 + light * 3.0;
+        x.beginPath(); x.arc(px, py, rad, 0, Math.PI * 2); x.fill();
+      }
+    }
+    x.globalCompositeOperation = 'source-over';
+  }
+
+  // long-run growth: stacked smooth curves
+  function wave() {
+    var lines = 30;
+    x.globalCompositeOperation = LIGHT ? 'multiply' : 'lighter';
+    for (var i = 0; i < lines; i++) {
+      var t = i / lines;
+      var light = Math.pow(t, 1.5);
+      x.beginPath();
+      for (var px = -20; px <= W + 20; px += 6) {
+        var u = px / W;
+        var base = H * (0.86 - Math.pow(u, 1.55) * 0.62);
+        var d = (fbm(u * 3.1 + i * 0.4, i * 0.31 + 2.0, 4) - 0.5) * H * 0.13;
+        var py = base + d + (1 - t) * H * 0.10;
+        px === -20 ? x.moveTo(px, py) : x.lineTo(px, py);
+      }
+      x.strokeStyle = brass(0.09 + light * 0.42, 0.2 + light * 0.8);
+      x.lineWidth = 0.9 + light * 3.0;
+      x.stroke();
+    }
+    x.globalCompositeOperation = 'source-over';
+  }
+
+  var MOTIF = { flow: flow, strata: strata, ledger: ledger, rings: rings, cells: cells, weave: weave, spiral: spiral, wave: wave };
+
+  /* ---------- compose ---------- */
+  ground();
+  (MOTIF[TYPE] || flow)();
+
+  // brass bloom pass
+  x.globalCompositeOperation = LIGHT ? 'multiply' : 'lighter';
+  var bl = x.createRadialGradient(W * 0.68, H * 0.28, 0, W * 0.68, H * 0.28, Math.max(W, H) * 0.6);
+  bl.addColorStop(0, LIGHT ? 'rgba(206,168,96,0.14)' : 'rgba(214,164,80,0.20)');
+  bl.addColorStop(1, 'rgba(0,0,0,0)');
+  x.fillStyle = bl; x.fillRect(0, 0, W, H);
+  x.globalCompositeOperation = 'source-over';
+
+  // vignette
+  var vg = x.createRadialGradient(W * 0.5, H * 0.5, Math.min(W, H) * 0.34, W * 0.5, H * 0.5, Math.max(W, H) * 0.86);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, LIGHT ? 'rgba(196,182,156,0.34)' : 'rgba(2,4,9,0.52)');
+  x.fillStyle = vg; x.fillRect(0, 0, W, H);
+
+  // film grain
+  var img = x.getImageData(0, 0, W, H), d = img.data;
+  for (var pI = 0; pI < d.length; pI += 4) {
+    var g2 = (Math.random() - 0.5) * 6;
+    d[pI] += g2; d[pI + 1] += g2; d[pI + 2] += g2;
+  }
+  x.putImageData(img, 0, 0);
+
+  document.title = 'ready';
+  window.__artReady = true;
+})();
+</script>
+</body>
+</html>

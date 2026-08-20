@@ -1,0 +1,7 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# full-resolution originals pulled off the live site; not part of the build
+tools/harvest/

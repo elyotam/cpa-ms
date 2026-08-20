@@ -1,0 +1,362 @@
+<section class="phero">
+  <div class="aura aura--brass" aria-hidden="true"></div>
+  <div class="wrap phero-in">
+    <nav class="crumbs" aria-label="מיקום בעמוד">
+      <a href="index.html">בית</a><span>›</span><span>מחשבוני מס</span>
+    </nav>
+    <h1 data-rv>מחשבוני מס <em class="brass">2026</em></h1>
+    <p data-rv>
+      שלושה כלים שמריצים את מדרגות המס, נקודות הזיכוי, שיעורי הביטוח הלאומי ותקרת העוסק
+      הפטור של 2026 על המספרים שלכם. הכל רץ בדפדפן, בלי הרשמה ובלי שהנתונים עוזבים את המכשיר.
+    </p>
+  </div>
+</section>
+
+<div class="subnav">
+  <ul>
+    <li><a href="#net" class="on">נטו לעצמאי</a></li>
+    <li><a href="#track">איזה מסלול משתלם</a></li>
+    <li><a href="#ni">ביטוח לאומי</a></li>
+    <li><a href="#ni-more">הרחבה</a></li>
+    <li><a href="#numbers">המספרים של 2026</a></li>
+  </ul>
+</div>
+
+<section class="sec" id="net">
+  <div class="wrap">
+    <div class="sec-head" data-rv>
+      <span class="eyebrow">מחשבון 01</span>
+      <h2 class="sec-title">כמה נשאר בסוף השנה</h2>
+      <p class="sec-lead">מזינים מחזור והוצאות, ורואים כמה הולך למס הכנסה, כמה לביטוח לאומי, וכמה נשאר באמת.</p>
+    </div>
+
+    <div class="calc" id="calc-self" data-rv="zoom">
+      <div class="calc-head">
+        <div>
+          <h3>נטו לעצמאי · 2026</h3>
+          <p>אומדן המס, הביטוח הלאומי והנטו השנתי</p>
+        </div>
+      </div>
+      <div class="calc-body">
+        <div class="calc-in">
+          <div class="field">
+            <label for="s-rev">מחזור שנתי <b id="s-rev-v">₪300,000</b></label>
+            <input type="range" id="s-rev" min="30000" max="2000000" step="10000" value="300000">
+            <p class="hint">סך כל ההכנסות מהעסק לפני הוצאות</p>
+          </div>
+          <div class="field">
+            <label for="s-exp">הוצאות מוכרות <b id="s-exp-v">₪70,000</b></label>
+            <input type="range" id="s-exp" min="0" max="1200000" step="5000" value="70000">
+            <p class="hint">ספקים, שיווק, משרד, רכב, פחת וכל מה שהוכר</p>
+          </div>
+          <div class="field">
+            <label for="s-cp">נקודות זיכוי <b id="s-cp-v">2.25</b></label>
+            <input type="range" id="s-cp" min="0" max="10" step="0.25" value="2.25">
+            <p class="hint">תושב ישראל מקבל 2.25 בסיסיות. ילדים, לימודים וסיום שירות מוסיפים עוד.</p>
+          </div>
+        </div>
+        <div class="calc-out">
+          <div class="aura aura--brass" aria-hidden="true"></div>
+          <div class="res-row"><span>רווח לפני מס</span><b id="s-profit">—</b></div>
+          <div class="res-row"><span>מס הכנסה</span><b id="s-tax">—</b></div>
+          <div class="res-row"><span>ביטוח לאומי ומס בריאות</span><b id="s-ni">—</b></div>
+          <div class="res-row"><span>שיעור מס אפקטיבי</span><b id="s-rate">—</b></div>
+          <div class="res-row total"><span>נשאר בכיס, לשנה</span><b id="s-net">—</b></div>
+          <div class="res-bar" aria-hidden="true">
+            <i id="s-bar-net" style="background:linear-gradient(90deg,var(--accent-2),var(--accent))"></i>
+            <i id="s-bar-tax" style="background:#5B6B85"></i>
+            <i id="s-bar-ni" style="background:#39465C"></i>
+          </div>
+          <div class="res-legend">
+            <em><i style="background:var(--accent)"></i>נטו</em>
+            <em><i style="background:#5B6B85"></i>מס הכנסה</em>
+            <em><i style="background:#39465C"></i>ביטוח לאומי</em>
+            <em style="margin-inline-start:auto">לחודש: <b class="mono brass" id="s-monthly">—</b></em>
+          </div>
+          <div class="verdict" id="s-verdict"></div>
+        </div>
+      </div>
+      <p class="calc-note">
+        החישוב מבוסס על מדרגות מס הכנסה, נקודת זיכוי בשווי 242 ש״ח ושיעורי ביטוח לאומי לעצמאים נכון לשנת 2026,
+        ומניח שאין הכנסות נוספות, הפקדות פנסיוניות או זיכויים מיוחדים. 52% מדמי הביטוח הלאומי נלקחים בחשבון
+        כהוצאה מוכרת. זהו אומדן להמחשה בלבד ואינו מהווה ייעוץ מס.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="track" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-rv>
+      <span class="eyebrow">מחשבון 02</span>
+      <h2 class="sec-title">עוסק פטור, עוסק מורשה או חברה</h2>
+      <p class="sec-lead">
+        אותם נתונים, שלושה מבנים משפטיים. הטבלה מראה כמה נשאר בכיס בכל אחד מהם,
+        כולל מע״מ תשומות שעוסק פטור לא מקבל בחזרה ומס חברות ודיבידנד במסלול החברה.
+      </p>
+    </div>
+
+    <div class="calc" id="calc-track" data-rv="zoom">
+      <div class="calc-head">
+        <div>
+          <h3>השוואת מסלולים · 2026</h3>
+          <p>מה משאיר הכי הרבה בכיס בסוף השנה</p>
+        </div>
+      </div>
+      <div class="calc-body" style="grid-template-columns:1fr">
+        <div class="calc-in" style="border-inline-end:0;border-bottom:1px solid var(--line)">
+          <div class="field">
+            <label for="t-clients">הלקוחות שלי הם</label>
+            <div class="seg" id="t-clients" role="group" aria-label="סוג הלקוחות">
+              <button type="button" data-clients="business" class="on">עסקים</button>
+              <button type="button" data-clients="private">לקוחות פרטיים</button>
+            </div>
+            <p class="hint">
+              עסקים מקזזים את המע״מ, ולכן עוסק מורשה נשאר עם מלוא המחיר.
+              מול לקוחות פרטיים המחיר כבר כולל מע״מ, והוא חייב להעביר אותו הלאה.
+            </p>
+          </div>
+
+          <div class="f-grid" style="gap:0 2rem">
+            <div class="field">
+              <label for="t-rev">מחזור שנתי <b id="t-rev-v">₪400,000</b></label>
+              <input type="range" id="t-rev" min="50000" max="3000000" step="10000" value="400000">
+            </div>
+            <div class="field">
+              <label for="t-exp">הוצאות מוכרות, לפני מע״מ <b id="t-exp-v">₪90,000</b></label>
+              <input type="range" id="t-exp" min="0" max="1500000" step="5000" value="90000">
+            </div>
+            <div class="field">
+              <label for="t-cp">נקודות זיכוי <b id="t-cp-v">2.25</b></label>
+              <input type="range" id="t-cp" min="0" max="10" step="0.25" value="2.25">
+            </div>
+            <div class="field">
+              <label for="t-sal">משכורת בעלים בחברה <b id="t-sal-v">₪15,000 לחודש</b></label>
+              <input type="range" id="t-sal" min="0" max="60000" step="1000" value="15000">
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-out">
+          <div class="aura aura--brass" aria-hidden="true"></div>
+          <div class="cmp-scroll" style="position:relative;z-index:1">
+            <table class="cmp">
+              <thead>
+                <tr>
+                  <th>מסלול</th>
+                  <th>רווח לפני מס</th>
+                  <th>מסים</th>
+                  <th>ביטוח לאומי</th>
+                  <th>נשאר בכיס</th>
+                  <th>נטל כולל</th>
+                </tr>
+              </thead>
+              <tbody id="t-body"></tbody>
+            </table>
+          </div>
+          <div class="verdict" id="t-verdict"></div>
+        </div>
+      </div>
+      <p class="calc-note">
+        הנחות המודל: מע״מ בשיעור 18% על הוצאות של עוסק פטור, שאותו הוא אינו מקזז.
+        מס חברות 23%, מס דיבידנד 30% לבעל שליטה בהנחת חלוקה מלאה של הרווח, ומס יסף 3% מעל 721,560 ש״ח.
+        משכורת בעלים כוללת ביטוח לאומי של מעסיק ושל עובד. עלויות ניהול, ביקורת וייעוץ אינן נכללות בחישוב,
+        והן משמעותיות במסלול החברה. אומדן להמחשה בלבד, ואינו מהווה ייעוץ מס.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ni" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-rv>
+      <span class="eyebrow">מחשבון 03</span>
+      <h2 class="sec-title">ביטוח לאומי לעצמאי</h2>
+      <p class="sec-lead">
+        זה התשלום שהכי הרבה עצמאים מגלים באיחור. מזינים רווח, שנתי או חודשי,
+        ורואים בדיוק כמה יוצא בכל מדרגה וכמה זה לחודש.
+      </p>
+    </div>
+
+    <div class="calc" id="calc-ni" data-rv="zoom">
+      <div class="calc-head">
+        <div>
+          <h3>ביטוח לאומי ומס בריאות · 2026</h3>
+          <p>שתי מדרגות, תקרה אחת, והמקדמה החודשית שיוצאת מהן</p>
+        </div>
+      </div>
+
+      <div class="calc-body">
+        <div class="calc-in">
+          <div class="field">
+            <label for="n-mode">הרווח שאני מזין הוא</label>
+            <div class="seg" id="n-mode" role="group" aria-label="בסיס החישוב">
+              <button type="button" data-nimode="year" class="on">שנתי</button>
+              <button type="button" data-nimode="month">חודשי</button>
+            </div>
+            <p class="hint">הרווח הוא ההכנסה בניכוי ההוצאות המוכרות, לא המחזור.</p>
+          </div>
+
+          <div class="field">
+            <label for="n-profit"><span id="n-profit-label">רווח שנתי</span> <b id="n-profit-v">₪240,000</b></label>
+            <input type="range" id="n-profit" min="0" max="800000" step="5000" value="240000">
+            <p class="hint" id="n-profit-hint">שווה ערך ל־₪20,000 לחודש</p>
+          </div>
+        </div>
+
+        <div class="calc-out">
+          <div class="aura aura--brass" aria-hidden="true"></div>
+
+          <div class="res-row">
+            <span>מדרגה ראשונה · 7.7%<br><small class="muted" style="font-size:.78rem">עד ₪7,703 לחודש</small></span>
+            <b id="n-low">—</b>
+          </div>
+          <div class="res-row">
+            <span>מדרגה שנייה · 18%<br><small class="muted" style="font-size:.78rem">מעל ₪7,703 ועד תקרת ההכנסה המבוטחת</small></span>
+            <b id="n-high">—</b>
+          </div>
+          <div class="res-row"><span>שיעור אפקטיבי מהרווח</span><b id="n-rate">—</b></div>
+          <div class="res-row"><span>סך שנתי</span><b id="n-year">—</b></div>
+          <div class="res-row total"><span>מקדמה חודשית</span><b id="n-month">—</b></div>
+
+          <div class="res-bar" aria-hidden="true">
+            <i id="n-bar-low" style="background:linear-gradient(90deg,var(--accent-2),var(--accent))"></i>
+            <i id="n-bar-high" style="background:#5B6B85"></i>
+            <i id="n-bar-rest" style="background:rgba(120,132,152,.28)"></i>
+          </div>
+          <div class="res-legend">
+            <em><i style="background:var(--accent)"></i>מדרגה ראשונה</em>
+            <em><i style="background:#5B6B85"></i>מדרגה שנייה</em>
+            <em><i style="background:rgba(120,132,152,.28)"></i>נשאר בידיים</em>
+          </div>
+
+          <div class="verdict" id="n-verdict"></div>
+        </div>
+      </div>
+
+      <p class="calc-note">
+        שיעורי ביטוח לאומי ומס בריאות לעצמאי נכון ל־2026: 7.7% על החלק שעד ₪7,703 לחודש,
+        ו־18% על החלק שמעליו, עד תקרת ההכנסה המבוטחת. 52% מדמי הביטוח הלאומי מוכרים כהוצאה
+        לצורכי מס הכנסה, כך שהעלות נטו נמוכה מהסכום המוצג. אומדן להמחשה בלבד, ואינו מהווה ייעוץ.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ni-more" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-rv>
+      <span class="eyebrow">הרחבה</span>
+      <h2 class="sec-title">ביטוח לאומי — לא רק על הכנסה מעבודה</h2>
+      <p class="sec-lead">
+        המחשבון שלמעלה מטפל בעצמאי. אבל דמי ביטוח לאומי ומס בריאות חלים גם על
+        הכנסה שאינה מעבודה, וגם על מי שאין לו הכנסה בכלל. אלה השיעורים.
+      </p>
+    </div>
+
+    <div class="cmp-scroll" data-rv>
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th>הכנסה חודשית שאינה מעבודה</th>
+            <th>שיעור כולל</th>
+            <th>ביטוח לאומי</th>
+            <th>מס בריאות</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>עד ₪3,442</th>
+            <td class="best">פטור</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th>₪3,443 עד ₪7,703</th>
+            <td>12.09%</td>
+            <td>6.92%</td>
+            <td>5.17%</td>
+          </tr>
+          <tr>
+            <th>₪7,704 עד התקרה, ₪51,910</th>
+            <td>12.17%</td>
+            <td>7.00%</td>
+            <td>5.17%</td>
+          </tr>
+          <tr>
+            <th>מעל ₪51,910</th>
+            <td class="best">אין חיוב</td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mini-grid mt-2 stagger">
+      <div class="mini">
+        <b>מי שאינו עובד ואין לו הכנסות</b>
+        <span>חייב בתשלום מינימלי קבוע של ₪266 לחודש: ₪143 ביטוח לאומי ו־₪123 מס בריאות.</span>
+      </div>
+      <div class="mini">
+        <b>הכנסה פסיבית</b>
+        <span>שכר דירה שאינו עסקי, ריבית, דיבידנד ורווחי הון. הסיווג נקבע לפי אופי ההכנסה, לא לפי מקורה.</span>
+      </div>
+      <div class="mini">
+        <b>מי שגם עובד וגם יש לו הכנסה פסיבית</b>
+        <span>ההכנסה מהעבודה נספרת ראשונה. הפסיבית מצטרפת מעליה, ומה שחורג מהתקרה אינו מחויב.</span>
+      </div>
+      <div class="mini">
+        <b>52% מוכרים כהוצאה</b>
+        <span>מחצית ועוד מדמי הביטוח הלאומי של עצמאי מוכרים כהוצאה לצורכי מס הכנסה, כך שהעלות נטו נמוכה מהתשלום.</span>
+      </div>
+    </div>
+
+    <div class="callout mt-2" data-rv>
+      <b>שימו לב</b>
+      השיעורים והתקרות נכונים לשנת 2026 ומוצגים לצורכי התמצאות. סיווג ההכנסה,
+      גיל המבוטח ומעמד נוסף כמו סטודנט או מקבל קצבה משנים את החיוב בפועל.
+      לפני החלטה מהותית נדרשת בדיקה פרטנית — <a href="contact.html">אפשר פשוט להרים טלפון</a>.
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="numbers" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head" data-rv>
+      <span class="eyebrow">נתוני בסיס</span>
+      <h2 class="sec-title">המספרים של 2026, במקום אחד</h2>
+      <p class="sec-lead">אלה הנתונים שמאחורי שני המחשבונים. שווה לשמור את העמוד במועדפים.</p>
+    </div>
+
+    <div class="cmp-scroll" data-rv>
+      <table class="cmp">
+        <thead><tr><th>נושא</th><th>שיעור או סכום</th><th>הערה</th></tr></thead>
+        <tbody>
+          <tr><th>מדרגת מס ראשונה</th><td>10%</td><td>עד 7,010 ש״ח לחודש</td></tr>
+          <tr><th>מדרגה שנייה</th><td>14%</td><td>7,011 עד 10,060 ש״ח</td></tr>
+          <tr><th>מדרגה שלישית</th><td>20%</td><td>10,061 עד 19,000 ש״ח</td></tr>
+          <tr><th>מדרגה רביעית</th><td>31%</td><td>19,001 עד 25,100 ש״ח</td></tr>
+          <tr><th>מדרגה חמישית</th><td>35%</td><td>25,101 עד 46,690 ש״ח</td></tr>
+          <tr><th>מדרגה שישית</th><td>47%</td><td>46,691 עד 60,130 ש״ח</td></tr>
+          <tr><th>מס יסף</th><td>3% נוספים</td><td>על הכנסה שנתית מעל 721,560 ש״ח</td></tr>
+          <tr><th>שווי נקודת זיכוי</th><td class="best">242 ש״ח לחודש</td><td>2,904 ש״ח לשנה</td></tr>
+          <tr><th>תקרת עוסק פטור</th><td class="best">122,833 ש״ח</td><td>מחזור שנתי, לא רווח</td></tr>
+          <tr><th>ביטוח לאומי לעצמאי</th><td>7.7%</td><td>על 7,703 ש״ח הראשונים בחודש</td></tr>
+          <tr><th>ביטוח לאומי לעצמאי</th><td>18%</td><td>על היתרה, עד תקרת ההכנסה המבוטחת</td></tr>
+          <tr><th>תקרת הכנסה מבוטחת</th><td class="best">51,910 ש״ח לחודש</td><td>מעליה אין חיוב בדמי ביטוח</td></tr>
+          <tr><th>מס חברות</th><td>23%</td><td>על רווח החברה</td></tr>
+          <tr><th>מס דיבידנד</th><td>30%</td><td>לבעל שליטה, 25% למי שאינו בעל שליטה</td></tr>
+          <tr><th>מע״מ</th><td>18%</td><td>על עסקאות בישראל</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout mt-2" data-rv>
+      <b>שימו לב</b>
+      הנתונים מוצגים לצורכי הדגמה ועודכנו לשנת המס 2026. תקרות ושיעורים משתנים מעת לעת בהתאם לחקיקה
+      ולהוראות רשות המסים והביטוח הלאומי, ולכן לפני החלטה מהותית נדרשת בדיקה פרטנית.
+      <a href="contact.html">אפשר פשוט להרים טלפון</a>.
+    </div>
+  </div>
+</section>
