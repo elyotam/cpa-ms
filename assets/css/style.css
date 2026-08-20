@@ -954,7 +954,10 @@ html.no-motion .gsap-in{opacity:1;transform:none}
 
 .band{isolation:isolate}
 .band-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.42}
-.band>*:not(.band-video){position:relative;z-index:1}
+.band>*:not(.band-video):not(.aura){position:relative;z-index:1}
+/* the aura is light, not content: it must stay out of the flow, or it
+   adds 577px of empty box above the copy */
+.band .aura{position:absolute}
 .band::before{content:"";position:absolute;inset:0;z-index:0;
   background:linear-gradient(to top,rgba(6,10,20,.88),rgba(6,10,20,.55))}
 
@@ -1193,3 +1196,39 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
   .jstep:hover,.jstep:focus-within,
   .jstep:hover .jstep-n,.jstep:focus-within .jstep-n{transform:none}
 }
+
+/* ---------- the closing call sits in the page, not on top of it ---------- */
+/* it was running the full column width at full section padding, which made a
+   near-square slab. Narrower, shorter, and reading as the last note of the
+   page rather than a second hero. */
+.band{max-width:920px;margin-inline:auto;
+  padding:clamp(2rem,4vw,3.2rem) clamp(1.6rem,4vw,3.4rem);
+  border-color:var(--line);
+  background:linear-gradient(150deg,rgba(61,139,255,.10),rgba(11,21,38,.9) 55%,rgba(5,11,20,.95))}
+.band .aura{width:min(560px,90%);height:340px;top:-190px;opacity:.55}
+.band h2{font-size:clamp(1.5rem,3vw,2.3rem);max-width:22ch}
+.band p{margin:.9rem auto 1.7rem;max-width:52ch;font-size:1rem}
+
+
+/* ---------- the brand film ---------- */
+/* It used to run stock footage of the sea, which says calm in general but
+   says nothing about an accountant. The section's own words are about the
+   work being done and nobody lying awake, so the picture is now a desk with
+   the day finished on it — deliberately the opposite of the man rubbing his
+   eyes at midnight two sections above. */
+.film-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+  object-position:50% 62%;
+  filter:saturate(.62) contrast(1.04) brightness(.88) hue-rotate(-8deg);
+  transform:scale(1.06);animation:filmDrift 34s ease-in-out infinite alternate}
+@keyframes filmDrift{from{transform:scale(1.06) translate3d(0,0,0)}
+                     to{transform:scale(1.13) translate3d(-1.6%,-1.2%,0)}}
+html.a11y-nomotion .film-photo{animation:none}
+@media (prefers-reduced-motion:reduce){.film-photo{animation:none}}
+
+/* a daylight photograph needs a deeper scrim than a dark clip did, and a
+   wash of the brand blue so it belongs to the console rather than to a
+   stock library */
+.film-scrim{background:
+  linear-gradient(to left,rgba(4,9,15,.93) 0%,rgba(4,9,15,.66) 44%,rgba(4,9,15,.20) 100%),
+  linear-gradient(to top,rgba(4,9,15,.92) 0%,rgba(4,9,15,.38) 48%,rgba(4,9,15,.42) 100%),
+  radial-gradient(80% 60% at 20% 20%,rgba(61,139,255,.20),transparent 68%)}
